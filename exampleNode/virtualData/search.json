@@ -1,0 +1,19 @@
+{
+  "list": {
+    "english": {
+      "english": "english",
+      "chinese": "英语",
+      "application": "I like to learn English"
+    },
+    "math": {
+      "english": "math",
+      "chinese": "数学",
+      "application": "I like to learn Math"
+    },
+    "chinese": {
+      "english": "chinese",
+      "chinese": "语文",
+      "application": "I like to learn Chinese"
+    }
+  }
+}
