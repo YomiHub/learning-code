@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue-resource</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <!--   <style>
+    .fade-enter,
+    .fade-leave-to {
+      opacity: 0;
+      /* 从右侧进入 */
+      transform: translateX(150px);
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: all 0.8s ease;
+    }
+  </style> -->
+  <script src="./lib/vue-2.6.11.js"></script>
+  <script src="./lib/vue-resource-1.5.1.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <input type="button" value="发送请求" @click="sendGet">
+    <form id="book-form" class="book-form">
+      <input type="hidden" name="id">
+      <label for="name">书名：</label><input type="text" name="name"></br>
+      <label for="author">作者：</label><input type="text" name="author"></br>
+      <label for="category">分类：</label><input type="text" name="category"></br>
+      <label for="description">描述：</label><input type="text" name="description"></br>
+      <input type="button" value="post提交" @click="postBook">
+    </form>
+    <input type="button" value="jsonp请求" @click="sendJsonp">
+
+    <p>过渡类名实现动画</p>
+    <input type="button" value="toggle" @click="flag=!flag">
+    <transition name="fade">
+      <h3 v-if="flag">展示过渡动画</h3>
+    </transition>
+
+    <transition enter-active-class="fadeInRight" leave-active-class="fadeOutRight"
+      :duration="{ enter: 500, leave: 800 }">
+      <div class="animated" v-show="flag">动画哦</div>
+    </transition>
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        flag: false
+      },
+      methods: {
+        sendGet() {
+          this.$http.get('http://127.0.0.1:3000/books').then(function (result) {
+            console.log(result.body);
+          }, function (err) {
+
+          })
+        },
+        postBook() {
+          //发送post请求设置表单内容类型 application/x-www-form-urlencoded
+          this.$http.post('http://127.0.0.1:3000/books/book', {
+            name: '书名 ',
+            author: '作者',
+            category: '分类',
+            description: '描述'
+          }, {
+            emulateJSON: true //在第三个参数设置提交内容类型为普通表单数据格式
+          }).then(result => {
+            console.log(result.body);
+          }, err => {
+
+          })
+        },
+        sendJsonp() {
+          this.$http.jsonp('http://vue.studyit.io/api/jsonp').then(result => {
+            console.log(result.body);
+          }, err => {
+            console.log(err)
+          })
+        }
+      }
+
+    })
+  </script>
+</body>
+
+</html>

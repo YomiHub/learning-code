@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue基本代码</title>
+  <link rel="stylesheet" href="./lib/bootstrap.min.css">
+  <script src="./lib/vue-2.6.11.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+
+    .bg {
+      height: 150px;
+      background-color: aliceblue;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="word">
+    <input type="button" @click="run" value="滚动">
+    <input type="button" @click="stop" value="停止">
+    <h4>{{ mes }}</h4>
+
+    <div class="bg" @click.capture="bgClick">
+      <input type="button" value="按钮" @click="btnClick">
+    </div>
+    <a href="www.baidu.com" @click.prevent.once="aClick">百度</a>
+    <h4>{{formText}}</h4>
+    <input type="text" v-model="formText">
+
+    <ul>
+      <li v-for="(item,index) in list">{{item.name}}</li>
+    </ul>
+
+    <ul>
+      <li v-for="(val,key) in objInfo">{{key}}：{{val}}</li>
+    </ul>
+
+    <button @click="ctrlFlag">隐藏显示切换</button>
+    <h4 v-if="flag">v-if的使用</h4>
+    <h4 v-show="flag">v-show的使用</h4>
+    <!-- 可以调用多个过滤器 -->
+    <span>{{filterText|textChange("完成过滤")|nextChange}}</span>
+  </div>
+
+  <div id="app">
+    <p id="test">{{msg}}</p>
+  </div>
+
+
+  <div id="refTest">
+    <input type="button" value="获取DOM和组件元素" @click="getEle">
+    <p ref="domcontent">这是页面元素内容</p>
+    <refcomp ref="componentref"></refcomp>
+  </div>
+
+  <script>
+    Vue.filter('textChange', (data, arg) => { //第一个参数为待格式化的内容
+      return data.replace(/过滤器/g, arg);
+    })
+
+    Vue.filter('nextChange', (data) => {
+      return data + "调用第二个过滤器";
+    })
+    var vm1 = new Vue({
+      el: '#word',
+      data: {
+        mes: '滚动的文字，跑马灯效果',
+        timer: null,
+        formText: '实现表单元素的数据双向绑定',
+        filterText: "过滤器的使用，将过滤器替换为“完成过滤”",
+        list: [{
+            name: 'hym',
+            age: 21,
+            sex: 'men'
+          },
+          {
+            name: 'pjj',
+            age: 22,
+            sex: 'women'
+          }
+        ],
+        objInfo: {
+          name: 'hym',
+          age: 21,
+          sex: 'men'
+        },
+        flag: true
+      },
+      methods: {
+        wordChange: function () {
+          let start = this.mes.substring(0, 1); //截取第一个字符
+          let remain = this.mes.substring(1); //截取第一个字符以后的字符串
+          this.mes = remain + start;
+        },
+        run: function () {
+          if (this.timer != null) return; //防止多次开启定时器
+          this.timer = setInterval(() => {
+            this.wordChange();
+          }, 300)
+        },
+        stop: function () {
+          clearInterval(this.timer);
+          this.timer = null; //清除定时器之后记得初始化变量
+        },
+        bgClick() {
+          console.log("触发背景的事件");
+        },
+        btnClick() {
+          console.log("触发按钮的事件");
+        },
+        ctrlFlag() {
+          this.flag = !this.flag;
+        }
+      },
+    })
+
+    var vm2 = new Vue({
+      el: '#app',
+      data: {
+        msg: '数据初始化'
+      },
+      methods: {
+        show() {
+          console.log('调用show方法');
+        }
+      },
+      beforeCreate() { //第一个生命周期函数
+        //此时已经初始化了空的Vue实例对象，只有默认事件与生命周期函数，不能使用data和methods
+      },
+      created() { //第二个生命周期函数
+        //此时data和methods已经初始化，可以调用
+        console.log(this.msg);
+        this.show();
+      },
+      beforeMount() { //第三个生命周期函数，模板只是在内存中编译完成
+        //此时Vue已经执行了指令，在内存中生成编译好的最终模板字符串，且将其渲染为内存中的DOM，
+        //但只是在内存中渲染好了模板，并没有把编译好的模板挂载到真正的页面中
+
+        console.log(document.getElementById('test').innerText) //只能打印{{msg}}，页面元素还没有被替换
+      },
+      mounted() { //第四个生命周期函数，这是实例创建的最后一个生命周期函数
+        //此时编译好的模板已经挂载到页面中，可以通过DOM操作获取页面元素真实内容
+      },
+      beforeUpdate() { //触发事件改变msg的时候，在该生命周期函数内界面内容为更改前，data中内容为更改后
+        console.log('界面中的元素内容：' + document.getElementById('test').innerText);
+        console.log('data中的内容：' + this.msg);
+      },
+      updated() { //根据data最新数据在内存中渲染出一份最新的DOM树，然后将它渲染到了真实页面中，此时已经完成了Model到View的更新
+        console.log('界面中的元素内容：' + document.getElementById('test').innerText);
+        console.log('data中的内容：' + this.msg);
+      },
+    })
+    var refTest = new Vue({
+      el: '#refTest',
+      data: {},
+      methods: {
+        getEle() {
+          console.log(this.$refs.domcontent);
+          console.log(this.$refs.componentref.msg);
+          this.$refs.componentref.show(); //调用子组件的方法
+        }
+      },
+      components: {
+        refcomp: {
+          template: '<h3>这是组件的元素</h3>',
+          data: function () {
+            return {
+              msg: '通过获取dom元素获取组件的data'
+            }
+          },
+          methods: {
+            show() {
+              console.log('通过获取dom元素触发子组件的方法')
+            }
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

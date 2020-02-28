@@ -1,0 +1,228 @@
+<!-- <!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./lib/vue-2.6.11.js"></script>
+  <script src="./lib/vue-router.js"></script>
+  <style>
+    .router-link-active {
+      color: brown;
+      font-weight: 900;
+    }
+
+    .v-enter,
+    .v-leave-to {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+      transition: all 0.8s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <router-link to="/login/10/hym">登录</router-link>
+    <router-link to="/register">注册</router-link>
+    <transition mode="out-in">
+      <router-view></router-view>
+    </transition>
+
+  </div>
+
+  <template id="login">
+    <div>
+      登录组件
+    </div>
+  </template>
+  <template id="register">
+    <div>
+      注册组件
+    </div>
+  </template>
+  <script>
+    var login = {
+      //可以不用带this
+      template: '<h3>登陆===>{{$route.params.id}}===>{{$route.params.name}}</h3>',
+      created: function () { //组件生命周期钩子函数
+        console.log(this.$route.params);
+      }
+    }
+    var register = {
+      template: '#register'
+    }
+    var routerObj = new VueRouter({
+      //routers用于设置路由匹配规则，每个路由规则都是一个对象，且有两个必须属性
+      //1.path: 表示监听的路由链接地址
+      //2.component: 表示path 对应展示的组件，且必须是模板对象，不能是组件的引用名称
+      routes: [{
+          path: '/',
+          redirect: '/register'
+        },
+        {
+          path: '/login/:id/:name',
+          component: login //不是字符串的引用名称，而是对象
+        },
+        {
+          path: '/register',
+          component: register
+        }
+      ]
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      router: routerObj //配置路由
+    });
+  </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./lib/vue-2.6.11.js"></script>
+  <script src="./lib/vue-router.js"></script>
+  <style>
+    .router-link-active {
+      color: brown;
+      font-weight: 900;
+    }
+
+    .v-enter,
+    .v-leave-to {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+      transition: all 0.8s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <router-link to="/parent">parent</router-link>
+    <router-view></router-view>
+    <router-view name="left"></router-view>
+    <router-view name="main"></router-view>
+
+    <input type="text" v-model="first">+
+    <input type="text" v-model="second">=
+    <input type="text" v-model="full">
+  </div>
+
+  <template id="parent">
+    <div>
+      <h4>这里是父级组件，包含有登录注册子组件</h4>
+      <router-link to="/parent/login">登录</router-link>
+      <router-link to="/parent/register">注册</router-link>
+      <router-view></router-view>
+    </div>
+  </template>
+
+  <template id="login">
+    <div>
+      登录组件
+    </div>
+  </template>
+  <template id="register">
+    <div>
+      注册组件
+    </div>
+  </template>
+  <script>
+    var parent = {
+      template: '#parent'
+    }
+    var login = {
+      template: '#login',
+    }
+    var register = {
+      template: '#register'
+    }
+
+    var header = {
+      template: '<header>这是头部</header>'
+    }
+
+    var left = {
+      template: '<aside>左侧栏</aside>'
+    }
+
+    var main = {
+      template: '<section>主体内容</section>'
+    }
+    var routerObj = new VueRouter({
+      routes: [{
+        path: '/',
+        components: {
+          'default': header, //不设置name属性则默认渲染header
+          'left': left,
+          'main': main
+        }
+        /* component: parent,
+        children: [{
+            path: 'login', //会默认拼接父级的路径，所以访问路径为/parent/login，如果使用'/login'则访问路径仍是/login
+            component: login
+          },
+          {
+            path: 'register',
+            component: registe  r
+          }
+        ] */
+      }]
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        first: '',
+        second: ''
+      },
+      computed: {
+        //不需要在data中定义full属性
+        'full': function () {
+          return this.first + '-' + this.second;
+        }
+      },
+      /*   watch: {
+          'first': function (newVal, oldVal) {
+            this.full = newVal + '-' + this.second;
+          },
+          'second': function (newVal) {
+            this.full = this.first + '-' + newVal;
+          },
+          '$route.path': function (newUrl) {
+            if (newUrl === '/parent') {
+              console.log('切换到登录组件')
+            }
+          }
+        }, */
+      /* 
+            methods: {
+              getChange() {
+                this.full = this.first + '-' + this.second
+              }
+            }, */
+      router: routerObj //配置路由
+    });
+  </script>
+</body>
+
+</html>

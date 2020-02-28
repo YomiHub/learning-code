@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue组件</title>
+  <script src="./lib/vue-2.6.11.js"></script>
+  <style>
+    .fade-enter,
+    .fade-leave-to {
+      opacity: 0;
+      transform: translateY(150px);
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: all 1s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <a href="" @click.prevent="compName='myComp1'">comp1</a>
+    <a href="" @click.prevent="compName='myComp2'">comp2</a>
+
+    <transition name="fade" mode="out-in">
+      <component :is="compName"></component>
+    </transition>
+
+    <my-comp v-bind:msg-by-parent="msg"></my-comp>
+
+    <my-comp v-on:parentfunc="show"></my-comp>
+  </div>
+
+  <template id="mytem1">
+    <div><input type="button" value="count加一" @click="increment">
+      <h3>{{count}}</h3>
+    </div>
+  </template>
+  <template id="mytem2">
+    <div><input type="button" value="count加二" @click="increment">
+      <h3>{{count}}</h3>
+    </div>
+  </template>
+
+  <script>
+    /*  Vue.component('myComp', {
+      template: '<h3>这是组件要展示的html结构，通过template标签定义===>{{msg}}</h3>',
+      data: function () {
+        return {
+          msg: '这是组件中的data'
+        }
+      }
+    }); */
+    Vue.component('myComp1', {
+      template: '#mytem1',
+      data: function () {
+        return {
+          count: 0
+        }
+      },
+      methods: {
+        increment() {
+          this.count++; //调用组件data时要用this
+        }
+      },
+    });
+    Vue.component('myComp2', {
+      template: '#mytem2',
+      data: function () {
+        return {
+          count: 0
+        }
+      },
+      methods: {
+        increment() {
+          this.count = this.count + 2; //调用组件data时要用this
+        }
+      },
+    });
+
+    var vm = new Vue({
+      el: "#app",
+      methods: {
+        show() {
+          console.log('这是Vue实例的show方法')
+        }
+      },
+      components: {
+        myComp: {
+          template: '<div @click="run">点击调用父组件show方法</div>',
+          methods: {
+            run() {
+              //emit原译：触发、调用
+              this.$emit('parentfunc');
+            }
+          },
+          props: ['msgByParent']
+        }
+      },
+
+      data: {
+        compName: 'myComp1',
+        msg: '这是Vue实例中的msg'
+      },
+
+      filters: {},
+      directives: {},
+    })
+  </script>
+</body>
+
+</html>

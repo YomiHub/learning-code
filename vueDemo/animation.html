@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>小球半场动画</title>
+  <script src="./lib/vue-2.6.11.js"></script>
+  <script src="./lib/vue-resource-1.5.1.js"></script>
+  <style>
+    .ball {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: brown;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <input type="button" value="触发小球半场动画" @click="flag = !flag">
+    <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+      <div class="ball" v-show="flag"></div>
+    </transition>
+    </br>
+    <label for="">
+      id:
+      <input type="text" name="id" id="" v-model="id">
+    </label>
+    <label for="">
+      name:
+      <input type="text" name="name" id="" v-model="name">
+    </label>
+    <input type="button" value="添加" @click="add">
+    <ul>
+      <li v-for="item in list" :key="item.id">
+        {{item.id}}====={{item.name}}
+      </li>
+    </ul>
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        flag: false,
+        id: '',
+        name: '',
+        list: [{
+            id: 1,
+            name: 'hym'
+          },
+          {
+            id: 2,
+            name: 'zbl'
+          },
+          {
+            id: 3,
+            name: 'ffx'
+          }
+        ]
+      },
+      methods: {
+        //动画开始前，初始化小球的位置，其中el是原生DOM对象
+        beforeEnter(el) {
+          el.style.transform = "translate(0,0)";
+        },
+        enter(el, done) {
+          el.offsetWidth; //强制刷新，否则动画效果无法显示，同样可以使用el.offsetLeft|offsetRight|offsetHeight
+          //动画终止，定义小球结束动画的位置，以及过渡的状态
+          el.style.transform = "translate(150px,450px)";
+          el.style.transition = "all 1s ease";
+          done(); //是afterEnter函数的引用，调用则表示结束动画后立即执行该函数，不使用会有延迟
+        },
+        afterEnter(el) {
+          //动画结束后的操作，隐藏小球
+          this.flag = !this.flag;
+        },
+        add() {
+          this.list.push({
+            id: this.id,
+            name: this.name
+          })
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>列表动画</title>
+  <script src="./lib/vue-2.6.11.js"></script>
+  <script src="./lib/vue-resource-1.5.1.js"></script>
+  <style>
+    li {
+      border: 1px dashed #999;
+      line-height: 25px;
+      font-size: 12px;
+      padding: 5px;
+      margin: 4px;
+      width: 100%;
+    }
+
+    li:hover {
+      background-color: pink;
+      transition: all 1s ease;
+    }
+
+    .v-enter,
+    .v-leave-to {
+      opacity: 0;
+      transform: translateY(70px);
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+      transition: all 1s ease;
+    }
+
+    /* 移除元素时的动画，被删除元素后续的其它元素也产生动画，看起来动画不会生硬
+    必须和.v-leave-active{position:absolute}一起使用,需要给元素指定固定宽 */
+    .v-move {
+      transition: all 1s ease;
+    }
+
+    .v-leave-active {
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <label for="">
+      id:
+      <input type="text" name="id" id="" v-model="id">
+    </label>
+    <label for="">
+      name:
+      <input type="text" name="name" id="" v-model="name">
+    </label>
+    <input type="button" value="添加" @click="add">
+    <transition-group appear tag="ul">
+      <li v-for="(item,index) in list" :key="item.id" @click="del(index)">
+        {{item.id}}====={{item.name}}
+      </li>
+    </transition-group>
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        id: '',
+        name: '',
+        list: [{
+          id: 1,
+          name: 'hym'
+        }, {
+          id: 2,
+          name: 'hym'
+        }, {
+          id: 3,
+          name: 'hym'
+        }, {
+          id: 3,
+          name: 'hym'
+        }]
+      },
+      methods: {
+        add() {
+          this.list.push({
+            id: this.id,
+            name: this.name
+          })
+        },
+        del(index) {
+          this.list.splice(index, 1);
+        }
+      }
+    })
+  </script>
+</body>
+
+</html> -->
