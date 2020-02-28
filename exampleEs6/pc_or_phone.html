@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- saved from url=(0014)about:internet -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .box {
+      width: 200px;
+      height: 100px;
+      background: red;
+      -moz-border-radius: 100px / 50px;
+      -webkit-border-radius: 100px / 50px;
+      border-radius: 100px / 50px;
+    }
+
+    header,
+    section,
+    nav,
+    footer {
+      display: block;
+    }
+  </style>
+  <script type="text/javascript">
+    var system = {};
+    var p = navigator.platform;
+    var u = navigator.userAgent;
+
+    system.win = p.indexOf("Win") == 0;
+    system.mac = p.indexOf("Mac") == 0;
+    system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
+    if (system.win || system.mac || system.xll) { //如果是PC转
+      if (u.indexOf('Windows Phone') > -1) { //win手机端
+
+      } else {
+        window.location.href = "404.html";
+      }
+    }
+  </script>
+</head>
+
+<div id="prompt"></div>
+
+<body>
+  <div class="box"></div>
+</body>
+<p>这是body外面</p>
+
+</html>

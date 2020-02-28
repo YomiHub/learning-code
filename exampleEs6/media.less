@@ -1,0 +1,102 @@
+@size: 2; //当设计稿最小是750px，因为iphone4为320，所以所以像素要除以2
+
+body,
+ul {
+  margin: 0; //记得清除默认样式
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+.container {
+  display: block;
+  margin: 0 auto;
+  padding: 0 50px/@size;
+}
+
+
+.row:after {
+  content: "";
+  display: block;
+  clear: both;
+  /*  必须加在浮动元素最后面的位置才是有用的 */
+}
+
+//@index表示循环执行的次数
+.col(@index, @screen, @number) when(@index>0) {
+  .col(@index - 1, @screen, @number); //循环调用col直到index不满足>0的条件
+
+  .col-@{screen}-@{index} {
+    width: 100%/@number*@index; //一行为number份，index列所占的份数
+    box-sizing: border-box;
+    //IE8+
+    -moz-box-sizing: border-box;
+    //Firefox 
+    -webkit-box-sizing: border-box; //safri、chrome
+    float: left;
+  }
+}
+
+.xs-hidden {
+  display: none;
+}
+
+.col(10, xs, 13); //750设计稿内容宽为650  循环设置col-xs-1到col-xs-13
+
+
+/*每列占比 */
+/* .col-xs-1 {
+  width: 10%;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  //IE8+
+  -moz-box-sizing: border-box;
+  //Firefox 
+  -webkit-box-sizing: border-box;
+  //safri、chrome
+  float: left;
+}
+ */
+
+
+//  注意选择优先级要大于小屏幕
+@media all and(min-width:768px) {
+  .container {
+    width: 400px;
+  }
+
+
+}
+
+@media all and(min-width:960px) {
+  .col(20, md, 20);
+
+  .md-hidden {
+    display: none;
+  }
+
+  .md-visited {
+    display: block;
+  }
+
+  .container {
+    width: 960px;
+  }
+
+  .row {
+    /* 解决container不影响列的问题，就是让容器加了padding之后仍然撑满一行 ,去除小尺寸的padding*/
+    margin-left: -50px/@size;
+    margin-right: -50px/@size;
+  }
+}
+
+@media all and(min-width:1180px) {
+  .container {
+    width: 1080px;
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="file" id="test-file" />
+  <input type="submit" value="选择的文件列表" id="btn" />
+  <img src="uploads/1.png" />
+  <script>
+    var testFile = document.getElementById('test-file');
+    var btn = document.getElementById('btn');
+
+    //通过ajax要发送的信息是testFile.files[0]   //具体的文件对象
+    btn.onclick = function () {
+      console.log(testFile.files) //返回控件testfile中选择的文件[object list]
+      var xhr = new XMLHttpRequest();
+
+      var oUpload = xhr.upload; //要将onprogress放在上传事件之前
+      oUpload.onprogress = function (ev) {
+        var iScale = ev.loaded / ev.total;
+        btn.value = iScale * 100;
+        console.log(iScale * 100)
+        //进度条总长*iScale = 当前进度  iScale*100 
+      }
+
+      xhr.open('post', 'post_file.php', true);
+      xhr.setRequestHeader('X-Request-with', 'XMLHttpRequest');
+      //发送的文件
+      var formData = new FormData(); //文件对象要用formData发送
+
+      for (var attr in testFile.files) {
+        console.log(testFile.files[attr]) //文件对象：name、size、type等
+        formData.append('file', testFile.files[attr]); //key value  (key对应后台请求的数据参数)
+      }
+
+      xhr.send(formData);
+      xhr.onload = function () {
+        if (xhr.readyState == '4' && xhr.status == '200') {
+          var backData = JSON.parse(this.responseText);
+          console.log(backData);
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
