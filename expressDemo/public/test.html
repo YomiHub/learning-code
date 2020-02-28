@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>testFile</div>
+  <form>
+    用户名：<input type="text" name="username">
+    密码：<input type="password" name="pass">
+    <input type="button" id="login" value="登录验证">
+  </form>
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script>
+    $(function () {
+      $('#login').click(function () {
+        var dataObj = {
+          username: $('input[name = "username"]').val(),
+          pass: $('input[name = "pass"]').val()
+        }
+        $.ajax({
+          type: 'POST',
+          url: 'http://127.0.0.1:3000/login',
+          contentType: 'application/json',
+          dataType: 'text',
+          //data:$('form:eq(0)').serialize(),
+          data: JSON.stringify(dataObj),
+          success: function (data) {
+            console.log(data);
+          }
+        })
+      })
+    })
+  </script>
+</body>
+
+</html>
