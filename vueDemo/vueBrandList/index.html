@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue实现品牌列表管理</title>
+  <link rel="stylesheet" href="./lib/bootstrap.min.css">
+  <script src="./lib/vue-2.6.11.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">添加品牌</h3>
+      </div>
+      <div class="panel-body form-inline">
+        <label for="id">
+          ID：
+          <input type="text" name="id" class="form-control" v-model="id">
+        </label>
+        <label for="name">
+          Name:
+          <input type="text" name="name" class="form-control" v-model="name" @keyup.enter="add">
+        </label>
+        <input type="button" value="添加" class="btn btn-primary" @click="add">
+        <label for="keywords">
+          搜索关键字：
+          <input type="text" name="keywords" class="form-control" v-model="keywords" v-focus>
+        </label>
+      </div>
+    </div>
+    <table class="table table-bordered table-hover table-striped">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>name</th>
+          <th>create time</th>
+          <th>opration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in search(keywords)" :key="item.id">
+          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.time | dateFormat}}</td>
+          <td>
+            <a href="javascript:;" @click.prevent="del(item.id)" v-color v-fontweight="600" v-fontsize="'18px'">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    /*
+    //全局过滤器     
+    Vue.filter('dateFormat', (date, pattern = '') => {
+      let dt = new Date(date);
+      let y = dt.getFullYear();
+      let m = dt.getMonth() + 1;
+      let d = dt.getDate();
+      //避免未传参报错，需要设置pattern参数的默认值
+      if (pattern.toLowerCase() == 'yyyy-mm-dd') {
+        //返回年月日
+        // return y + '-' + m + '-' + d;
+        return `${y}-${m}-${d}`
+      } else {
+        //返回时分秒
+        let hh = dt.getHours();
+        let mm = dt.getMinutes();
+        let ss = dt.getSeconds();
+        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+      }
+
+    }) 
+    
+    //自定义键盘码
+    Vue.config.keyCodes.f2 = 113;
+    */
+
+    //自动聚焦到文本框
+    Vue.directive('focus', {
+      //所有方法第一个参数永远是el，表示被绑定指令的元素，是原生的JS对象
+      bind: function (el) { //当指令绑定到元素上的时候，立即执行bind函数，只执行一次
+
+        //el.focus();绑定指令的时候，元素还没有插入到DOM 中，无法获取焦点，所以调用focus方法没有用
+      },
+      inserted: function (el) { //元素插入到Dom的时候，会执行inserted函数，触发一次
+        el.focus(); //原生JS对象
+      },
+      updated: function (el) { //当VNode更新的时候，会执行updated，可能会触发多次
+
+      }
+    })
+
+    //自定义设置字体颜色的指令
+    Vue.directive('color', {
+      //只要通过指令绑定了元素，无论元素有没有插入到页面中，这个元素就有了一个内联的样式，显示的时候也就必然会解析样式
+
+      bind: function (el, binding) {
+        el.style.color = 'red';
+        //指令名称、指令绑定的值v-color="值"、指令绑定的表达式"1+1"
+        // console.log(binding.name + '' + binding.value + '' + binding.expression)
+      }
+    })
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        id: '',
+        name: '',
+        keywords: '',
+        brandList: [{ //页面渲染的静态数据
+            id: 1,
+            name: 'MAC',
+            time: new Date()
+          },
+          {
+            id: 2,
+            name: 'Chanel',
+            time: new Date()
+          },
+          {
+            id: 3,
+            name: 'TF',
+            time: new Date()
+          }
+        ]
+      },
+      methods: {
+        add() {
+          let item = {
+            id: this.id,
+            name: this.name,
+            time: new Date()
+          };
+          this.brandList.push(item);
+          this.id = '';
+          this.name = '';
+        },
+        del(id) {
+          //1.通过some方法，在return true的时候停止后续循环
+          /*  this.brandList.some((item, index) => {
+             if (item.id === id) {
+               this.brandList.splice(index, 1);
+               return true;
+             }
+           }) */
+
+          //2.通过新方法findIndex，在return true的时候返回对应的索引值
+          let index = this.brandList.findIndex(item => {
+            if (item.id === id) {
+              return true;
+            }
+          })
+          this.brandList.splice(index, 1);
+        },
+        search(keywords) {
+          //1.遍历查找包含keywords的name，将对应数据放入新数组中
+          /* let newList = [];
+          this.brandList.forEach((item, index) => {
+            if (item.name.indexOf(keywords) != -1) {
+              newList.push(item);
+            }
+          })
+          return newList; */
+
+          //2.filter过滤符合条件的item，方法返回数组
+          return this.brandList.filter(item => {
+            if (item.name.includes(keywords)) {
+              return item;
+            }
+          })
+        }
+      },
+      filters: {
+        dateFormat(dateStr, pattern = '') {
+          let dt = new Date(dateStr);
+          let y = dt.getFullYear();
+          let m = dt.getMonth() + 1;
+          let d = dt.getDate();
+
+          if (pattern.toLowerCase() == 'yyyy-mm-dd') {
+            return `${y}-${m}-${d}`
+          } else {
+            let hh = dt.getHours().toString().padStart(2, '0'); //第一个参数是补全后的字符长度
+            let mm = dt.getMinutes().toString().padStart(2, '0');
+            let ss = dt.getSeconds().toString().padStart(2, '0');
+            return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+          }
+        }
+      },
+      directives: {
+        'fontweight': {
+          bind: function (el, binding) {
+            el.style.fontWeight = binding.value;
+          }
+        },
+        'fontsize': function (el, binding) { //注意 这里的function等同于将代码写到bind和update中
+          //v-fontsize="'18px'"调用的时候可带可不带单位，但带单位要用字符串
+          el.style.fontSize = parseInt(binding.value) + 'px';
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
