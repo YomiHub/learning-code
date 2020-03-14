@@ -396,23 +396,74 @@ function fn (x = throwIfMissing()) {
  */
 
 //?6.rest参数   ...变量名，获取函数的多余参数放入到变量数组中，就可以不使用arguments对象:Array.prototype.slice.call(arguments).sort();
-function fn (x, ...values) {
+/* function fn (x, ...values) {
   for (var val of values) {
     console.log(x);
     console.log(val);  //2 3
   }
 }
 
-fn(1, 2, 3);
+fn(1, 2, 3); */
 
 
 //?7.严格模式 ，从ES5开始允许在函数内使用'use strict'设置为严格模式，在es6中只要参数使用了解构赋值、默认参数、扩展运算符就不能显示设置严格模式
 
-const doSomething = (...a) => {
-  'use strict'; // 报错（剞劂）
-};
+/* const doSomething = (...a) => {
+  'use strict'; // 报错
+}; */
+
+//?8.函数的name属性，返回该函数的函数名（使用fn.bind({}).name返回的值会带有bound）
+/* var f = function fn () {
+  return 'f';
+}
+console.log(f.name);  //fn  在ES6中可以返回具名函数实际名
+ */
+
+//?9.箭头函数 => this指向是定义时所在的对象，且不可以改变；不能当作构造函数；不可以使用arguments对象；不可以使用yield;不适用于定义对象方法，以及需要动态this的时候
+/* var people = name => ({ name: 'hym', age: 18 })  //返回对象要在对象外加大括号
+console.log(people());  //{ name: 'hym', age: 18 } */
+
+//?10.目前只有Safari支持的 尾调用优化 且只在严格模式开启（即只保留内层函数的调用帧，不需要保留外层函数的调用帧），尾调用指的是在函数最后一步是调用另一个函数
+/* function fn1 () {
+  return fn2();   //最后一步，且不带操作，例如fn2()+1 调用后进行操作不属于尾调用
+} */
+
+//?11.尾递归 尾调自身，称为尾递归（对尾递归只存在一个调用帧，不存在栈溢出错误,节省内存）；用到的内部变量改写成函数的参数可实现尾递归
+/* function Fibonacci (n, ac1 = 1, ac2 = 1) {
+  if (n <= 1) return ac2;
+  return Fibonacci(n - 1, ac2, ac1 + ac2);
+}
+
+console.log(Fibonacci(100));  //573147844013817200000 */
+
+//?12.尾调递归优化的实现，将递归函数改写为每一步返回一个函数
+
+//蹦床函数可以将递归执行变为循环执行
+/* function trampoline (f) {
+  while (f && f instanceof Function) {  //执行后返回的是函数，就继续执行函数
+    f = f();
+  }
+  return f;  //改为每步返回一个函数
+} */
+
+//?13 ES2017允许 函数参数的尾逗号，允许函数在定义或调用时在函数参数尾部添加逗号
+/* function clownsEverywhere (
+  param1,
+  param2,
+) { //code
+} */
 
 
+//?14 ES2019修改了Function.property.toString()，以前会省略注释与空格，ES2019要求返回完全一样的源代码
+/* console.log(clownsEverywhere.toString()) */
+
+
+//?15.catch命令参数省略，以前明确规定catch后面要跟参数接收try抛出的错误对象，在ES2019允许省略这个可能用不上的参数
+try {
+  throw Error('error');
+} catch{
+  console.log('这是无参catch')
+}
 
 /* ---------------------------------字符串新增方法----------------------------------------------- */
 //
