@@ -42,6 +42,37 @@ console.log(testInfo)
 console.log(name)
 console.log(titlechange)
 
+//组件的自动化全局注册https://cn.vuejs.org/v2/guide/components-registration.html
+const requireComponent = require.context(
+  // Look for files 
+  './components',
+  // Do not look in subdirectories
+  false,
+  // Only include "_base-" prefixed .vue files
+  /_base-[\w-]+\.vue$/
+)
+
+// For each matching file name...
+requireComponent.keys().forEach((fileName) => {
+  // Get the component config
+  const componentConfig = requireComponent(fileName)
+  // Get the PascalCase version of the component name
+  const componentName = fileName
+    // Remove the "./_" from the beginning
+    .replace(/^\.\/_/, '')
+    // Remove the file extension from the end
+    .replace(/\.\w+$/, '')
+    // Split up kebabs
+    .split('-')
+    // Upper case
+    .map((kebab) => kebab.charAt(0).toUpperCase() + kebab.slice(1))
+    // Concatenated
+    .join('')
+
+  // Globally register the component
+  Vue.component(componentName, componentConfig.default || componentConfig)
+})
+
 var vm = new Vue({
   el: '#app',
   data: {

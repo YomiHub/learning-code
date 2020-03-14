@@ -1,47 +1,112 @@
 <template>
   <div>
-    <mt-button type="primary" icon="back" @click="show">primary button</mt-button>
+    <BaseBack></BaseBack>
+    <BaseBtn></BaseBtn>
+
     <button type="button" class="mui-btn">默认</button>
-    <button type="button" class="mui-btn mui-btn-primary">蓝色</button>
-    <button type="button" class="mui-btn mui-btn-success">绿色</button>
+
     <div>这里是.vue文件内的登录模板{{ msg }}</div>
     <router-link to="/pageone">pageone</router-link>
     <router-link to="/pagetwo">pagetwo</router-link>
     <router-view></router-view>
+
+    <div id="dynamic-fade-demo" class="demo">
+      Fade In:
+      <input
+        type="range"
+        v-model="fadeInDuration"
+        min="0"
+        v-bind:max="maxFadeDuration"
+      />
+      Fade Out:
+      <input
+        type="range"
+        v-model="fadeOutDuration"
+        min="0"
+        v-bind:max="maxFadeDuration"
+      />
+      <transition
+        v-bind:css="false"
+        v-on:before-enter="beforeEnter"
+        v-on:enter="enter"
+        v-on:leave="leave"
+      >
+        <p v-if="show">hello</p>
+      </transition>
+      <button
+        v-if="stop"
+        v-on:click="
+          stop = false
+          show = false
+        "
+      >
+        Start animating
+      </button>
+      <button v-else v-on:click="stop = true">Stop it!</button>
+    </div>
+
+    <input type="text" v-focus />
   </div>
 </template>
 <style></style>
 <script>
-import { Toast } from "mint-ui";
+import { Toast } from 'mint-ui'
 export default {
   data() {
     return {
-      msg: "这是组件内data函数return的对象数据",
-      toastInstanse: null
-    };
+      msg: '这是组件内data函数return的对象数据',
+      show: true,
+      fadeInDuration: 1000,
+      fadeOutDuration: 1000,
+      maxFadeDuration: 1500,
+      stop: true
+    }
   },
   created() {
     //生命周期函数，组件加载完毕
-    this.getList();
+  },
+  mounted: function() {
+    this.show = false
   },
   methods: {
-    getList() {
-      //模拟数据获取，开始就显示正在加载数据的toast
-      this.show();
-      setTimeout(() => {
-        //使用箭头函数，使内部this指向上下文的对象的this指向
-        this.toastInstanse.close();
-      }, 3000);
+    beforeEnter: function(el) {
+      el.style.opacity = 0
     },
-    show() {
-      console.log("调用了.vue组件的show方法");
-      this.toastInstanse = Toast({
-        message: "提示",
-        position: "top",
-        duration: -1,
-        iconClass: "glyphicon glyphicon-ok"
-      });
+    enter: function(el, done) {
+      var vm = this
+      Velocity(
+        el,
+        { opacity: 1 },
+        {
+          duration: this.fadeInDuration,
+          complete: function() {
+            done()
+            if (!vm.stop) vm.show = false
+          }
+        }
+      )
+    },
+    leave: function(el, done) {
+      var vm = this
+      Velocity(
+        el,
+        { opacity: 0 },
+        {
+          duration: this.fadeOutDuration,
+          complete: function() {
+            done()
+            vm.show = true
+          }
+        }
+      )
+    }
+  },
+  directives: {
+    focus: {
+      inserted: function(el) {
+        el.focus()
+      }
     }
   }
-};
+}
 </script>
