@@ -459,11 +459,138 @@ console.log(Fibonacci(100));  //573147844013817200000 */
 
 
 //?15.catch命令参数省略，以前明确规定catch后面要跟参数接收try抛出的错误对象，在ES2019允许省略这个可能用不上的参数
-try {
+/* try {
   throw Error('error');
 } catch{
   console.log('这是无参catch')
+} */
+
+
+/* ---------------------------------数组新增方法----------------------------------------------- */
+//?1.扩展运算符，...[x,y]将数组转为用逗号分隔的参数，相当于rest参数的逆运算，主要用于函数调用 （通过扩展运算符数组就可以方便使用Math.max()）
+/* function fn (x, y) {
+  return x + y;
 }
+console.log(fn(...[1, 2]));  //3 */
+
+//?2.扩展运算符的应用
+/* //（1）复制数组
+const a1 = [1, 2, 3]
+const a2 = [...a1]
+console.log(a2);
+
+//（2）合并数组，浅拷贝
+const arr = [...a1, ...a2]
+
+//（3）与解构赋值结合，用于生成数组、数组赋值（只能放在参数最后一位）
+const [a, ...arr1] = [1, 2, 3, 4];
+console.log(a);  //1
+console.log(arr1);  //[ 2, 3, 4 ]
+
+//（4）将字符串转为数组，可以用于正确识别四个字节的Unicode字符  [...str].length
+console.log([...'hym']);  //[ 'h', 'y', 'm' ]
+
+//（5）任何实现了Iterator接口的对象都可以使用扩展运算符转为真正的数组
+// let nodelist = document.querySelectorAll('div');
+// let arr2 = [...nodelist];
+
+//（6）Set、Map、Generator函数
+const go = function* () {
+  yield 1;
+  yield 2;
+};
+console.log([...go()]);  //[ 1, 2 ]
+
+let map = new Map([
+  [1, 'one'],
+  [2, 'two'],
+  [3, 'three'],
+]);
+
+let arr3 = [...map.keys()];
+console.log(map.keys())  //[Map Iterator] { 1, 2, 3 }
+console.log(arr3)  // [1, 2, 3] */
+
+//?3.Array.from()任何有length属性的对象，都可以通过Array.from方法转为数组
+/* const arr = Array.from({ length: 2 }, () => 'jack')  //第三个参数用于绑定this
+console.log(arr);// ['jack', 'jack'] */
+
+//?4.Array.Of() Array.of用于将一组值，转换为数组；总是返回参数值组成的数组。如果没有参数，就返回一个空数组，解决Array()或new Array()参数不同导致的重载
+/* console.log(Array.of());
+console.log(new Boolean()); */
+
+//?5.实例方法copyWithin(target开始替换位置,start开始读取位置,end)，在数组内部将指定位置的成员复制到其他位置，返回当前数组
+/* console.log([1, 2, 3, 4, 5].copyWithin(0, 3));  //[ 4, 5, 3, 4, 5 ] */
+
+//?6.实例方法find(),用于查找第一个符合条件的成员；参数为一个回调函数，数组成员依次执行该函数，直到找到第一个符合条件的返回
+/* console.log([1, 2, 3, 4].find((item, index, arr) => {
+  return item > 3;  //4 符合条件时返回
+})) */
+
+//?7.实例方法findIndex()，使用与find类似，用于返回符合条件成员的位置，和find方法一样可以接受第二个参数用于指定回调函数的this指向(不能使用箭头函数)
+/* let person = { age: 12 };
+let fn = function (item) {
+  return item > this.age;
+}
+let res = [13, 12, 3, 14].find(fn, person)
+
+console.log(res); */
+
+//?8.实例方法fill()，使用给定值填充数组，第一个参数用于填充，第二第三个元素用于指定起始位置和结束位置
+/* let arr = new Array(3).fill(1);
+console.log(arr);  //[ 1, 1, 1 ] */
+
+//?9.数组实例方法：entries()键值对遍历、keys()键名遍历、values()键值遍历 用于遍历数组并返回遍历器对象（可使用for···of遍历，或者遍历器对象调用entries.next().value）
+/* for (let [index, item] of ['h', 'y', 'm'].entries()) {
+  console.log(index, item);  //0 h  1 y  2 m
+} */
+
+//?10.数组实例方法 includes()，返回一个布尔值，表示数组是否包含给定值;第一个参数是指定值，第二参数表示搜索起始位，默认为0
+/* console.log([1, 2, 3].includes(1));  //true;
+//可替代的方法：arr.indexOf(1)!==-1;可以判断环境是否支持方法，再写一个可替代方法
+const contains = (() => {
+  return Array.prototype.includes
+    ? (arr, item) => arr.includes(item)
+    : (arr, item) => arr.some(el => { el === item });
+})()
+
+console.log(contains([12, 3, 4, 5], 3)); //true; */
+
+//?11.数组的实例flat()用于展平数组，默认只能展平一层，可以用参数指明展平的层数Infinity;注意的是flat会跳过数组的空位
+/* console.log([1, 1, [3, 4, 5, [2, 9]]].flat(Infinity));  //[ 1, 1, 3, 4, 5, 2, 9] */
+
+//?12.flatMap() 用于遍历展平数组，只展平一层，参数为一个遍历函数（item,index,arr）;实例方法还可以指定第二个参数，用于绑定遍历函数中的this
+console.log([1, 2, 3].flatMap(function (item) {
+  return [item, item + this.name]; //[ 1, '1test', 2, '2test', 3, '3test' ]
+}, { name: 'test' }));
+
+//?13.空位处理，forEach()、filter()、reduce()、every()、some()都会跳过空位，map会跳过空位，但是会保留该值;toString()、join会将空位视为undefined；ES6则将空位转为undefined
+[, 'a'].forEach((item, index) => {
+  console.log(index);
+})  //1
+
+console.log([, 'a'].map(item => {
+  return 1;
+}))  //[ <1 empty item>, 1 ]
+
+//?14.ES2019规定Array.prototype.sort()排序必须稳定，指排序关键字相同的项目排序前后的顺序不变
+const stableSort = (s1, s2) => {
+  if (s1[0] < s2[0]) {  //按首字母稳定排序（对于首字母相同的字符串相对位置不变）
+    return -1;
+  }
+  return 1;
+}
+
+const unstableSort = (s1, s2) => {
+  if (s1[0] <= s2[0]) {  //按首字母不稳定排序（对于首字母相同的字符串相对位置改变）
+    return -1;
+  }
+  return 1;
+}
+
+const arr = ['hym', 'hjx', 'hxh', 'hyx', 'hyz'];
+console.log(arr.sort(stableSort));  //[ 'hym', 'hjx', 'hxh', 'hyx', 'hyz' ]
+console.log(arr.sort(unstableSort)); //[ 'hyz', 'hyx', 'hxh', 'hjx', 'hym' ]
 
 /* ---------------------------------字符串新增方法----------------------------------------------- */
 //
