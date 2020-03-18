@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>axios基本使用</title>
+  <script src="./lib/vue-2.6.11.js"></script>
+  <script src="./lib/axios.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <button @click="axiosGet">{{getBtn}}</button>
+    <button @click="axiosPost">{{postBtn}}</button>
+  </div>
+
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        getBtn: 'get请求',
+        postBtn: 'post请求'
+      },
+      methods: {
+        axiosGet() {
+          axios.get('http://127.0.0.1:3000/getGoodsComment', {
+            params: {
+              articleid: 2
+            }
+          }).then(function (res) {
+            console.log(res)
+          }).catch(function (err) {
+
+          })
+        },
+        axiosPost() {
+          //发送的数据格式为Request Payload，就不能以json形式传参，而是通过键值对形式传参，可以使用axios里面自带的qs模块
+          //这里发送的是跨域请求，且为json格式，这是在后台默认通过option请求，并设置content-type 代码如下
+          /*  
+          res.header("Access-Control-Allow-Origin", "*");  //允许跨域请求
+          res.setHeader("Access-Control-Allow-Methods", "*");
+          res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+          if (req.method == "OPTIONS") {
+             res.status(200).send('{"test": "options ok"}');
+             return;
+           } */
+          //post同样可以发送图片，但需要使用formData.append
+          axios.post('http://127.0.0.1:3000/addGoodsComment', {
+            article_id: 2,
+            add_time: new Date().toUTCString(),
+            username: 'hym',
+            content: '这是一个axios使用测试请求'
+          }).then(function (res) {
+            console.log(res)
+          }).catch(function (err) {
+
+          })
+        }
+      }
+    });
+    //测试请求后台地址为 http://127.0.0.1:3000
+
+    //getGoodsComment?articleid=2
+    //addGoodsComment
+    /* {
+      article_id: 2,
+      add_time: new Date().toUTCString(),
+      username: 'hym',
+      content: '这是一个axios使用测试请求'
+    } */
+  </script>
+</body>
+
+</html>

@@ -474,7 +474,8 @@ console.log(Fibonacci(100));  //573147844013817200000 */
 console.log(fn(...[1, 2]));  //3 */
 
 //?2.扩展运算符的应用
-/* //（1）复制数组
+/*
+//（1）复制数组
 const a1 = [1, 2, 3]
 const a2 = [...a1]
 console.log(a2);
@@ -560,21 +561,21 @@ console.log(contains([12, 3, 4, 5], 3)); //true; */
 /* console.log([1, 1, [3, 4, 5, [2, 9]]].flat(Infinity));  //[ 1, 1, 3, 4, 5, 2, 9] */
 
 //?12.flatMap() 用于遍历展平数组，只展平一层，参数为一个遍历函数（item,index,arr）;实例方法还可以指定第二个参数，用于绑定遍历函数中的this
-console.log([1, 2, 3].flatMap(function (item) {
+/* console.log([1, 2, 3].flatMap(function (item) {
   return [item, item + this.name]; //[ 1, '1test', 2, '2test', 3, '3test' ]
-}, { name: 'test' }));
+}, { name: 'test' })); */
 
 //?13.空位处理，forEach()、filter()、reduce()、every()、some()都会跳过空位，map会跳过空位，但是会保留该值;toString()、join会将空位视为undefined；ES6则将空位转为undefined
-[, 'a'].forEach((item, index) => {
+/* [, 'a'].forEach((item, index) => {
   console.log(index);
 })  //1
 
 console.log([, 'a'].map(item => {
   return 1;
-}))  //[ <1 empty item>, 1 ]
+}))  //[ <1 empty item>, 1 ] */
 
 //?14.ES2019规定Array.prototype.sort()排序必须稳定，指排序关键字相同的项目排序前后的顺序不变
-const stableSort = (s1, s2) => {
+/* const stableSort = (s1, s2) => {
   if (s1[0] < s2[0]) {  //按首字母稳定排序（对于首字母相同的字符串相对位置不变）
     return -1;
   }
@@ -590,7 +591,166 @@ const unstableSort = (s1, s2) => {
 
 const arr = ['hym', 'hjx', 'hxh', 'hyx', 'hyz'];
 console.log(arr.sort(stableSort));  //[ 'hym', 'hjx', 'hxh', 'hyx', 'hyz' ]
-console.log(arr.sort(unstableSort)); //[ 'hyz', 'hyx', 'hxh', 'hjx', 'hym' ]
+console.log(arr.sort(unstableSort)); //[ 'hyz', 'hyx', 'hxh', 'hjx', 'hym' ] */
 
-/* ---------------------------------字符串新增方法----------------------------------------------- */
-//
+/* ---------------------------------对象的扩展----------------------------------------------- */
+//?1.属性简洁表示法：允许直接在大括号中写入变量和函数，作为对象的属性和方法（省略了key），用于函数返回值输出一组变量、打印一组对象（注意的是对象简写方法不能作为构造函数使用）
+/* let foo = 'hym'
+const obj = {
+  foo,  //等价于 foo:foo
+  method () {  //等价于 method:method
+    console.log('这里是obj对象的方法');
+  }
+}
+
+console.log(obj.foo);   // hym
+obj.method();  //这里是obj对象的方法 */
+
+//?2.属性名表达式：使用标识符作为属性名.、使用表达式作为属性名（将表达式放入方括号内）；使用字面量{}定义对象，在ES5中只能使用标识符，ES6可以使用表达式
+//属性名表达式和简洁表示法不能同时使用，且属性名表达式如果是对象则会自动将对象转为字符串[object,object]
+/* let name = 'work';
+const obj = {
+  [name]: 'student'
+}
+console.log(obj.work)  //student
+console.log(obj[name]); */
+
+//?3.方法的name属性返回函数名（方法名）：如果对象使用了getter或setter则name属性在方法属性的描述对象的get和set属性上面，返回值在方法前加get和set
+//有两种特殊情况：bind方法创造的函数，name属性返回bound加上函数名、Function构造函数创造的函数，name属性返回的是anonymous
+//如果对象是Symbol值，则name返回的是Symbol的描述值
+/* var doFn = function () {
+  console.log('doFn');
+}
+console.log(doFn.bind().name);  //bound doFn
+
+console.log((new Function()).name);  //anonymous
+
+let key1 = Symbol('description');
+let key2 = Symbol();
+const o = {
+  [key1] () {
+    console.log('symbol key1');
+  },
+  [key2] () {
+    console.log('symbol key2');
+  }
+}
+
+console.log(o[key1].name);//[description]
+console.log(o[key2].name); // ""
+
+const obj = {
+  foo: 'foo',
+  get foo () {
+    return this.foo;
+  },
+  set foo (f) {
+    this.foo = f;
+  }
+}
+
+const descriptor = Object.getOwnPropertyDescriptor(obj, 'foo');
+console.log(descriptor.get.name);  //get foo
+console.log(descriptor.set.name);  //set foo */
+
+//?4.属性的可枚举性和遍历：对象的每一个属性都有一个描述对象，可通过方法Object.getOwnPropertyDescriptor获取
+
+//描述对象enumerable属性（可枚举性），如果属性为false，则某些操作会忽视该属性比如：ES5中的for···in循环、Object.keys()、JSON.stringify()、ES6中的Object.assign()
+/* console.log(Object.getOwnPropertyDescriptor(Object.prototype, 'toString').enumerable)  //false */
+
+//!遍历对象属性的5个方法：（1）for···in (2)Object.keys(obj)  (3)Object.getOwnPropertyNames(obj)  (4)Object.getOwnPropertySymbols(obj) (5)Reflect.ownKeys(obj)
+//5个遍历方法都遵循相同的遍历规则：先遍历数值键，按值升序；遍历字符串键，按加入时间升序；遍历Symbol键，按时间升序
+
+//?5.super关键字（类似this关键字），总是指向当前对象的原型对象；注意，super关键字表示原型对象时，只能用在对象的方法之中，用在其他地方都会报错
+
+/* //只有对象方法的简写法可以让 JavaScript 引擎确认，定义的是对象的方
+let parent = {
+  foo: 'hello'
+}
+
+const obj = {
+  foo: 'world',
+  find () {
+    return super.foo;
+  }
+}
+Object.setPrototypeOf(obj, parent);  //为存在的对象指定原型对象
+
+console.log(obj.find()); //hello  无原型对线则返回undefined */
+
+
+//?6.ES2018将扩展运算符引入了对象,对象的扩展运算符（...）用于取出参数对象的所有可遍历属性，拷贝到当前对象之中，等同于使用Object.assign()方法；结合解构赋值使用时要求右边必须是对象，当null或undefined时报错
+/* //扩展运算符的解构赋值，不能复制继承自原型对象的属性
+//如果使用解构赋值，扩展运算符后面必须是一个变量名
+let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+console.log(x);  //1
+console.log(z)  //{ a: 3, b: 4 }
+
+//!对于扩展运算符后面不是对象，则会自动转为对象，如果对象没有自身属性则会转为空对象;展运算符后面是字符串，它会自动转成一个类似数组的对象
+
+console.log({ ...1 })  //{}
+console.log({ ...undefined })  //{}
+console.log({ ...'hym' })  //{ '0': 'h', '1': 'y', '2': 'm' }
+
+let obj = new Object({ name: 'hym' })
+obj.age = 18;
+
+//!完整克隆对象：
+const clone1 = Object.assign(
+  Object.create(Object.getPrototypeOf(obj)),  //还会拷贝对象原型的属性
+  obj
+)
+
+const clone2 = Object.assign(
+  Object.getPrototypeOf(obj),
+  Object.getOwnPropertyDescriptors(obj)
+)
+
+console.log(clone1);  //{ name: 'hym', age: 18 }
+console.log(clone2); */
+/* {
+  name: {
+    value: 'hym',
+    writable: true,
+    enumerable: true,
+    configurable: true
+  },
+  age: { value: 18, writable: true, enumerable: true, configurable: true }
+}
+*/
+
+//!扩展运算符的参数对象之中，如果有取值函数get，这个函数是会执行的
+
+//? 7.链判断运算符?. 判断一个对象是否存在(在nodev12.10.0下不能使用)，简化如下运算判断 const fooValue = fooInput ? fooInput.value : undefined
+
+/* let message = { name: 'hym' };
+const firstName = (message
+  && message.body
+  && message.body.user
+  && message.body.user.firstName) || 'default';
+const firstName2 = message?.body?.user?.firstName || 'default';  //链判断，如果左侧的对象为undefined或null则不往下算，直接返回undefined
+
+//可以应用于:(1)obj?.prop 对象属性 （2）obj?.[expr] 对象属性 （3）函数或对象方法调用 fun?.(...args);
+let a = {
+  name: 'hym',
+  b: 18
+}
+console.log(a?.b);
+// 等同于
+a == null ? undefined : a.b */
+
+//?8.Null 判断运算符 :ES2020 引入了一个新的 Null 判断运算符??(在nodev12.10.0下不能使用)。它的行为类似||，但是只有运算符左侧的值为null或undefined时，才会返回右侧的值
+
+//对于左侧是null、undefined、false、0，使用||的时候，右侧的值也会生效
+/* var res = false || 'hym';
+var res2 = false ?? 'hym';
+console.log(res, res2); */
+
+
+
+/* ---------------------------------对象新增方法----------------------------------------------- */
+//  
+
+
+/* ---------------------------------对象新增方法----------------------------------------------- */
+//  
