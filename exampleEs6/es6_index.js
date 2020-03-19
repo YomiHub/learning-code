@@ -749,8 +749,114 @@ console.log(res, res2); */
 
 
 /* ---------------------------------对象新增方法----------------------------------------------- */
-//  
+//?1.Object.is()用于比较两个值是否严格相等，在===符的基础上改进：可以识别NaN和+-0
+/* console.log(NaN === NaN);  //false
+console.log(+0 === -0);  //true
 
+console.log(Object.is(NaN, NaN))  //true
+console.log(Object.is(+0, -0));//false */
+
+
+//?2.Object.assign(target,source1,source2)用于将源对象的可枚举属性复制到目标对象，对于同名的属性后面的会覆盖前面的（参数为null或undefined不能作为首参数，且会被跳过）
+/* var res = Object.assign({ b: 'b' }, Object.defineProperty({}, 'invisible', {
+  enumrable: false,  //不可枚举的属性不会被Object.assign()拷贝
+  value: 'hello world'
+}), { [Symbol('c')]: 'c' });  //Symbol值的属性可以被拷贝
+
+console.log(res) //{ b: 'b', [Symbol(c)]: 'c' }
+
+
+//!对于取值函数，会取值之后再进行复制
+const source = {
+  get foo () { return 1 }
+};
+const target = {};
+
+console.log(Object.assign(target, source));  //{ foo: 1 }
+
+//!主要用途：为对象添加属性、添加方法、克隆对象 、合并多个对象、为属性指定默认值
+
+class Point {
+  constructor(x, y) {
+    Object.assign(this, { x, y })  //将属性添加到类的对象实例中
+  }
+  getProp () {
+    console.log(this.x, this.y);
+  }
+}
+
+new Point(1, 2).getProp();  //1 2
+
+//使用Object.assign()不能克隆继承的属性，可以进行改进
+function clone (origin) {
+  var cloneObj = Object.getPrototypeOf(origin);  //原型指向origin
+  return Object.assign(Object.create(cloneObj), origin);
+} */
+
+//?3.ES5引入Object.getOwnPropertyDescriptor()用于返回某个对象属性的描述对象；ES2017 引入了Object.getOwnPropertyDescriptors()方法，返回指定对象所有自身属性（非继承属性）的描述对象
+
+/* //解决Object.assign()不能复制get和set函数的问题
+
+const source = {
+  get foo () {
+    console.log('foo');
+  }
+}
+const target = {};
+Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+console.log(Object.getOwnPropertyDescriptor(target, 'foo'));  //获取对象指定属性的属性描述对象
+
+// {
+//   get: [Function: get foo],
+//   set: undefined,
+//   enumerable: true,
+//   configurable: true
+// } */
+
+
+//?4.__prop__属性（IE11也部署了该属性，用于获取或设置当前对象的prototype对象）、Object.setPrototypeOf()用于设置对象的prototype对象，返回参数对象本身、Object.getPrototypeOf()读取对象的原型对象
+/* // es5 的写法
+const otherObj = {
+  name: 'hym',
+  age: 18
+}
+const obj1 = {
+  method: function () { console.log(this.name) }
+};
+obj1.__proto__ = otherObj;
+
+obj1.method();   //hym
+
+// es6 的写法
+var obj2 = Object.create(otherObj);
+obj2.method = function () { console.log(this.name) };
+
+obj2.method();  //hym
+
+const o = Object.setPrototypeOf({}, otherObj);
+console.log(o.name) */
+
+
+//?5.ES5引入Object.keys()、ES2017引入Object.values()、Object.entries()返回自身可遍历属性值、键值对数组，可结合for···of使用
+/* const obj = Object.create({}, { p: { value: 'hym' } });  //Object.create()第二个参数默认是不可遍历的
+const obj1 = Object.create({}, { p: { value: 'hym', enumerable: true } });
+
+console.log(Object.keys(obj));  //[]
+console.log(Object.keys(obj1));  //[ 'p' ]
+
+const person = {
+  name: 'hym',
+  age: 18
+}
+
+//主要用于遍历对象属性、将对象转为真正的Map结构
+console.log(Object.entries(person));  //[ [ 'name', 'hym' ], [ 'age', 18 ] ]  返回的是键值对数组
+console.log(new Map(Object.entries(person)))  //Map { 'name' => 'hym', 'age' => 18 } */
+
+//?6.Object.fromEntries()  是entries的逆操作，将键值对数组转为对象，可用于将map结构转为对象、结合URLSearchParams()将查询字符串转为对象
+/* console.log(Object.fromEntries([['name', 'hym'], ['age', 18]]));  //{ name: 'hym', age: 18 }
+console.log(Object.fromEntries(new Map().set('name', 'hym').set('age', 18)));  //{ name: 'hym', age: 18 }
+console.log(Object.fromEntries(new URLSearchParams('foo=bar&baz=qux')))  //{ foo: 'bar', baz: 'qux' } */
 
 /* ---------------------------------对象新增方法----------------------------------------------- */
 //  
