@@ -31,7 +31,7 @@ export default {
       this.toastInstanse = Toast({
         message: '提示',
         position: 'top',
-        duration: -1,
+        duration: 1000, //设置为-1 不会自动消失
         iconClass: 'glyphicon glyphicon-ok'
       })
     }

@@ -13,6 +13,10 @@
   <div id="app">
     <button @click="axiosGet">{{getBtn}}</button>
     <button @click="axiosPost">{{postBtn}}</button>
+    <button @click="axiosConfig">{{configBtn}}</button>
+    <button @click="axiosAll">并发请求</button>
+    <button @click="axiosDesign">自定义请求</button>
+    <button @click="axiosInterceptors">拦截请求</button>
   </div>
 
   <script>
@@ -20,7 +24,8 @@
       el: '#app',
       data: {
         getBtn: 'get请求',
-        postBtn: 'post请求'
+        postBtn: 'post请求',
+        configBtn: '对象配置参数请求'
       },
       methods: {
         axiosGet() {
@@ -57,19 +62,92 @@
           }).catch(function (err) {
 
           })
+        },
+        axiosConfig() {
+          //通过设置对象的参数配置axios
+          axios({
+            url: 'http://127.0.0.1:3000/getGoodsComment',
+            method: 'get',
+            params: {
+              articleid: 2
+            }
+          }).then(function (res) {
+            console.log(res);
+          }).catch(function (err) {
+
+          })
+        },
+        axiosAll() {
+          //并发请求
+          function getAxios1() {
+            return axios.get('http://127.0.0.1:3000/getGoodsComment', {
+              params: {
+                articleid: 2
+              }
+            })
+          }
+
+          function getAxios2() {
+            return axios.get('http://127.0.0.1:3000/getGoodsComment', {
+              params: {
+                articleid: 3
+              }
+            })
+          }
+
+          axios.all([getAxios1(), getAxios2()]).then(axios.spread(function (data1, data2) {
+            console.log(data1);
+            console.log(data2);
+          }))
+        },
+        axiosDesign() {
+          //自定义配置新建一个axios实例
+          var instance = axios.create({
+            baseURL: 'http://127.0.0.1:3000/',
+            timeout: 3000
+          })
+
+          //使用别名请求时，url、method、data，不用再配置参数中配置
+          instance.get('getGoodsComment', {
+            params: {
+              articleid: 2
+            }
+          }).then(function (data) {
+            console.log(data);
+          });
+        },
+        axiosInterceptors() {
+          var instance = axios.create({
+            baseURL: 'http://127.0.0.1:3000/',
+            url: 'addGoodsComment',
+            method: 'post',
+            //通过data属性配置参数时需要设置contentType，默认发送的是application/x-www-form-urlencoded
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8'
+            }
+          });
+
+          instance.interceptors.request.use(function (config) {
+            console.log('在这里处理发送请求之前的相关操作')
+            return config;
+          }, function (error) {
+            // 对响应错误做点什么
+            return Promise.reject(error);
+          })
+
+          instance.request({
+            data: {
+              article_id: 2,
+              add_time: new Date().toUTCString(),
+              username: 'hym',
+              content: "这是一个axios使用测试请求"
+            }
+          }).then(function (res) {
+            console.log(res);
+          })
         }
       }
     });
-    //测试请求后台地址为 http://127.0.0.1:3000
-
-    //getGoodsComment?articleid=2
-    //addGoodsComment
-    /* {
-      article_id: 2,
-      add_time: new Date().toUTCString(),
-      username: 'hym',
-      content: '这是一个axios使用测试请求'
-    } */
   </script>
 </body>
 

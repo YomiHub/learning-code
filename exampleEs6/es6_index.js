@@ -857,7 +857,4 @@ console.log(new Map(Object.entries(person)))  //Map { 'name' => 'hym', 'age' => 
 console.log(Object.fromEntries(new Map().set('name', 'hym').set('age', 18)));  //{ name: 'hym', age: 18 }
 console.log(Object.fromEntries(new URLSearchParams('foo=bar&baz=qux')))  //{ foo: 'bar', baz: 'qux' } */
 
-/* ---------------------------------对象新增方法----------------------------------------------- */
-//  
-
 /* -------------------------参考自：阮一峰的ES6入门https://es6.ruanyifeng.com/  ------------------------------- */

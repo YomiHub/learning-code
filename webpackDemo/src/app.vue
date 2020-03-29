@@ -5,7 +5,7 @@
 
     <button type="button" class="mui-btn">默认</button>
 
-    <div>这里是.vue文件内的登录模板{{ msg }}</div>
+    <div>这里是.vue文件内的登录模板<br />{{ msg }}</div>
     <router-link to="/pageone">pageone</router-link>
     <router-link to="/pagetwo">pagetwo</router-link>
     <router-view></router-view>
@@ -44,8 +44,10 @@
       </button>
       <button v-else v-on:click="stop = true">Stop it!</button>
     </div>
-
     <input type="text" v-focus />
+    <hr />
+    <h4>以下按钮用于测试axios</h4>
+    <button @click="axiosGet">axiosGet</button>
   </div>
 </template>
 <style></style>
@@ -99,6 +101,15 @@ export default {
           }
         }
       )
+    },
+    axiosGet() {
+      this.$axios('getGoodsComment', {
+        params: {
+          articleid: 2
+        }
+      }).then(function(data) {
+        console.log(data)
+      })
     }
   },
   directives: {

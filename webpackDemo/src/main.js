@@ -25,6 +25,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import Vue from 'vue'
 import vueRouter from 'vue-router'
 Vue.use(vueRouter)
+import axios from 'axios'
+Vue.prototype.$axios = axios;  //可以在组件中通过this.$axios()调用
 
 // import MintUI from 'mint-ui'
 import { Button, Cell } from 'mint-ui'
@@ -38,6 +40,7 @@ import './lib/mui/css/mui.min.css'
 import login from './app.vue'
 import testInfo, { title as titlechange, name } from './js/testExport.js'
 import router from './router.js'
+
 console.log(testInfo)
 console.log(name)
 console.log(titlechange)
@@ -45,7 +48,7 @@ console.log(titlechange)
 //组件的自动化全局注册https://cn.vuejs.org/v2/guide/components-registration.html
 const requireComponent = require.context(
   // Look for files 
-  './components',
+  './components',  //将components文件夹下所有_base开始的.vue注册为全局的组件
   // Do not look in subdirectories
   false,
   // Only include "_base-" prefixed .vue files

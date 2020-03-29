@@ -6,7 +6,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 //使用Node中的模块操作，向外暴露了一个配置对象，直接运行命令webpack运行该文件
 module.exports = {
   mode: 'development',  // webpack 使用相应环境
-  devtool: 'cheap-module-eval-source-map ', //生产环境使用 none 或者是 source-map
+  devtool: 'source-map', //cheap-module-eval-source-map 生产环境使用 none 或者是 source-map
   entry: path.join(__dirname, './src/main.js'),   //指定webpack打包的文件
   output: {
     path: path.join(__dirname, './dist'),  //指定输出文件的目录
@@ -17,6 +17,14 @@ module.exports = {
     port: 3000,
     contentBase: 'src',
     hot: true
+    /*  //解决跨域问题 
+    proxyTable: {
+      //用于调用的接口域名与端口
+      target: 'http://127.0.0.1:3000/api'
+      pathRewrite: {
+        '^api': '/'  //替换api为/，在axios调用时直接使用./api相对路径
+      }
+    } */
   },
   plugins: [  //配置插件的节点
     new webpack.HotModuleReplacementPlugin(),
