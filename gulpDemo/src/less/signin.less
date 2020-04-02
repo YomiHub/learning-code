@@ -1,0 +1,258 @@
+@charset "utf-8";
+@r: 1365/91rem;
+
+.button {
+  display: inline-block;
+  font-size: 16/@r;
+  color: #444444;
+  cursor: pointer;
+}
+
+.row-flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.row-flex-between {
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.row-flex-center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: centers;
+  justify-content: center;
+}
+
+#page-wrap {
+  width: 100%;
+  height: 100vh;
+  background-image: url(../imgs/signIn/sign_bg.db29b0fb.png);
+  background-color: #b8e5f8;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: auto;
+}
+
+.content-wrap {
+  width: 401/@r;
+  margin: 0 auto;
+  padding-top: 30/@r;
+  padding-bottom: 44/@r;
+}
+
+#page-wrap h1 a {
+  display: block;
+  width: 128/@r;
+  height: 80/@r;
+  margin: 0 auto;
+}
+
+#page-wrap h1 img {
+  width: 100%;
+  height: 100%;
+}
+
+.form-wrap {
+
+  padding-top: 23/@r;
+}
+
+#signin-form .form-input {
+  padding: 0 24/@r;
+}
+
+#signin-form {
+  background: #ffffff;
+  position: relative;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1);
+  border-radius: 4/@r;
+}
+
+#signin-form .nav-select {
+  height: 60/@r;
+}
+
+#signin-form .nav-select button {
+  line-height: 60/@r;
+  margin-right: 23/@r;
+}
+
+.sign-code {
+  width: 52/@r;
+  height: 52/@r;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.sign-code svg {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#signin-form .nav-select .active {
+  font-weight: 600;
+}
+
+#signin-form .nav-select .active:after {
+  display: block;
+  content: "";
+  width: 100%;
+  height: 3/@r;
+  background: #0084ff;
+}
+
+#signin-form .same-input {
+  height: 22px;
+  padding: 13/@r 0;
+  border-bottom: 1px solid #ebebeb;
+}
+
+#signin-form .phone-write {
+  margin-top: 24/@r;
+}
+
+#signin-form .phone-write svg {
+  margin-left: 8/@r;
+}
+
+#signin-form .phone-write input,
+#signin-form .phone-write button,
+#signin-form .verify-code input {
+  line-height: 22/@r;
+}
+
+#signin-form .phone-write span {
+  display: inline-block;
+  width: 1px;
+  height: 22/@r;
+  background: #ebebeb;
+  margin: 0 12/@r;
+}
+
+#phone-num {
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  flex: 1 1 auto;
+}
+
+#signin-form .verify-code {
+  position: relative;
+  margin-top: 11/@r;
+}
+
+#signin-form .verify-code input {
+  width: 100%;
+}
+
+#get-code {
+  position: absolute;
+  right: 0;
+  color: #175199;
+}
+
+#signin-form .voice-code {
+  text-align: right;
+  padding-top: 12/@r;
+}
+
+#signin-form .voice-code .button {
+  font-size: 14/@r;
+  color: #8590a6;
+}
+
+#signin-form .signin-btn .button {
+  width: 100%;
+  margin-top: 30/@r;
+  line-height: 36/@r;
+  background: #0084ff;
+  border-radius: 3/@r;
+  color: #ffffff;
+  font-size: 14/@r;
+}
+
+#signin-form .sign-tip {
+  margin-top: 26/@r;
+}
+
+
+#signin-form .sign-tip {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 12/@r 24/@r;
+  font-size: 12/@r;
+  background: #f6f6f6;
+}
+
+#signin-form .sign-tip p,
+#page-wrap .social-sign p {
+  color: grey;
+}
+
+#signin-form .sign-tip a {
+  color: #175199
+}
+
+#page-wrap .social-sign {
+  height: 60/@r;
+  margin-top: 24/@r;
+  padding: 0 24/@r;
+  border-radius: 4/@r;
+  background: #ffffff;
+}
+
+#page-wrap .social-sign svg {
+  margin-right: 6/@r;
+}
+
+#page-wrap .download-tip {
+  margin-top: 24/@r;
+  padding: 0 24/@r;
+  background: #ffffff;
+  border-radius: 3/@r;
+  text-align: center;
+}
+
+#page-wrap .download-tip .button {
+  color: #0084ff;
+  font-size: 14/@r;
+  line-height: 42/@r;
+}
+
+#page-wrap .download-tip svg {
+  margin-right: 11/@r;
+}
+
+.signin-footer {
+  padding-bottom: 20/@r;
+}
+
+.signin-footer a,
+
+.signin-footer,
+.signin-footer a,
+.signin-footer span {
+  text-align: center;
+  font-size: 12/@r;
+  color: #ffffff;
+  line-height: 26/@r;
+}
+
+
+.signin-footer a:not(:last-child):after,
+.signin-footer span:not(:last-child):after {
+  content: " \B7 ";
+  white-space: pre;
+  /* 空白会被浏览器保留。 */
+  display: inline-block
+}

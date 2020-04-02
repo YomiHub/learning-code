@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>this is index page</title>
+  <style>
+    #div1 {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      left: 100px;
+      top: 100px;
+      background: pink;
+    }
+  </style>
+</head>
+
+<body>
+  @@include('../common/header.html', {
+  "name": "hym",
+  "urls": {
+  "login": "./signin.html",
+  "testSoket": "./testSoket.html"
+  }
+  })
+  <button id="btn">点击</button>
+  <div id="div1"></div>
+  this is index page
+  <script src="http://copywebsite.com:3000/socket.io/socket.io.js"></script>
+  <script src="../js/index.js"></script>
+  <script>
+    (function () {
+      if (window.Notification) {
+        var btn = document.getElementById("btn");
+        var txt = document.getElementById("div1");
+        btn.onclick = function () {
+          if (Notification.permission == "granted") {
+            popNotice();
+          } else if (Notification.permission != "denied") {
+            Notification.requestPermission().then(function (permission) {
+              popNotice()
+            })
+          }
+        };
+
+        function popNotice() {
+          if (Notification.permission == "granted") {
+            var notification = new Notification("你好:", {
+              body: "请问今晚有空吗",
+              icon: "./imgs/v2-a47051e92cf74930bedd7469978e6c08_hd.png"
+            });
+            notification.onclick = function () {
+              txt.innerHTML = new Date().toTimeString().split(" ")[0] + "收到信息";
+              notification.close();
+            }
+          }
+        }
+      } else {
+        console.log("浏览器不支持Notification");
+      }
+    })();
+  </script>
+
+</body>
+
+</html>

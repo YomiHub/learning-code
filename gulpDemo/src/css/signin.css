@@ -1,0 +1,253 @@
+@charset "utf-8";
+
+.button {
+  display: inline-block;
+  font-size: 1.06666667rem;
+  color: #444444;
+  cursor: pointer;
+}
+
+.row-flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.row-flex-between {
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.row-flex-center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: centers;
+  justify-content: center;
+}
+
+#page-wrap {
+  width: 100%;
+  height: 100vh;
+  background-image: url(../imgs/signIn/sign_bg.db29b0fb.png);
+  background-color: #b8e5f8;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: auto;
+}
+
+.content-wrap {
+  width: 26.73333333rem;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-bottom: 2.93333333rem;
+}
+
+#page-wrap h1 a {
+  display: block;
+  width: 8.53333333rem;
+  height: 5.33333333rem;
+  margin: 0 auto;
+}
+
+#page-wrap h1 img {
+  width: 100%;
+  height: 100%;
+}
+
+.form-wrap {
+  padding-top: 1.53333333rem;
+}
+
+#signin-form .form-input {
+  padding: 0 1.6rem;
+}
+
+#signin-form {
+  background: #ffffff;
+  position: relative;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 0.26666667rem;
+}
+
+#signin-form .nav-select {
+  height: 4rem;
+}
+
+#signin-form .nav-select button {
+  line-height: 4rem;
+  margin-right: 1.53333333rem;
+}
+
+.sign-code {
+  width: 3.46666667rem;
+  height: 3.46666667rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.sign-code svg {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#signin-form .nav-select .active {
+  font-weight: 600;
+}
+
+#signin-form .nav-select .active:after {
+  display: block;
+  content: "";
+  width: 100%;
+  height: 0.2rem;
+  background: #0084ff;
+}
+
+#signin-form .same-input {
+  height: 22px;
+  padding: 0.86666667rem 0;
+  border-bottom: 1px solid #ebebeb;
+}
+
+#signin-form .phone-write {
+  margin-top: 1.6rem;
+}
+
+#signin-form .phone-write svg {
+  margin-left: 0.53333333rem;
+}
+
+#signin-form .phone-write input,
+#signin-form .phone-write button,
+#signin-form .verify-code input {
+  line-height: 1.46666667rem;
+}
+
+#signin-form .phone-write span {
+  display: inline-block;
+  width: 1px;
+  height: 1.46666667rem;
+  background: #ebebeb;
+  margin: 0 0.8rem;
+}
+
+#phone-num {
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  flex: 1 1 auto;
+}
+
+#signin-form .verify-code {
+  position: relative;
+  margin-top: 0.73333333rem;
+}
+
+#signin-form .verify-code input {
+  width: 100%;
+}
+
+#get-code {
+  position: absolute;
+  right: 0;
+  color: #175199;
+}
+
+#signin-form .voice-code {
+  text-align: right;
+  padding-top: 0.8rem;
+}
+
+#signin-form .voice-code .button {
+  font-size: 0.93333333rem;
+  color: #8590a6;
+}
+
+#signin-form .signin-btn .button {
+  width: 100%;
+  margin-top: 2rem;
+  line-height: 2.4rem;
+  background: #0084ff;
+  border-radius: 0.2rem;
+  color: #ffffff;
+  font-size: 0.93333333rem;
+}
+
+#signin-form .sign-tip {
+  margin-top: 1.73333333rem;
+}
+
+#signin-form .sign-tip {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.8rem;
+  background: #f6f6f6;
+}
+
+#signin-form .sign-tip p,
+#page-wrap .social-sign p {
+  color: grey;
+}
+
+#signin-form .sign-tip a {
+  color: #175199;
+}
+
+#page-wrap .social-sign {
+  height: 4rem;
+  margin-top: 1.6rem;
+  padding: 0 1.6rem;
+  border-radius: 0.26666667rem;
+  background: #ffffff;
+}
+
+#page-wrap .social-sign svg {
+  margin-right: 0.4rem;
+}
+
+#page-wrap .download-tip {
+  margin-top: 1.6rem;
+  padding: 0 1.6rem;
+  background: #ffffff;
+  border-radius: 0.2rem;
+  text-align: center;
+}
+
+#page-wrap .download-tip .button {
+  color: #0084ff;
+  font-size: 0.93333333rem;
+  line-height: 2.8rem;
+}
+
+#page-wrap .download-tip svg {
+  margin-right: 0.73333333rem;
+}
+
+.signin-footer {
+  padding-bottom: 1.33333333rem;
+}
+
+.signin-footer a,
+.signin-footer,
+.signin-footer a,
+.signin-footer span {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #ffffff;
+  line-height: 1.73333333rem;
+}
+
+.signin-footer a:not(:last-child):after,
+.signin-footer span:not(:last-child):after {
+  content: " \B7 ";
+  white-space: pre;
+  /* 空白会被浏览器保留。 */
+  display: inline-block;
+}

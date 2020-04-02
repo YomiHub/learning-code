@@ -1,0 +1,29 @@
+{
+  "name": "gulp-demo",
+  "version": "1.0.0",
+  "description": "this is a demo to test gulp project",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "D": "^1.0.0",
+    "gulp": "^4.0.2",
+    "gulp-file-include": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-connect": "^5.7.0",
+    "gulp-csso": "^4.0.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-less": "^4.0.1",
+    "gulp-livereload": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
+    "open": "^7.0.3"
+  }
+}
