@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jquery结合less实现移动端滑动分页加载</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="list-wrap">
+        <ul id="list-ul">
+          <!-- <li class="list-item">
+            <a href="javascript:;">
+              <div class="text-content">
+                <p class="multiline_ecllipsis">
+                  1.-webkit-line-clamp用来限制在一个块元素显示的文本的行数。
+                  为了实现该效果，它需要组合其他的WebKit属性。常见结合属性：
+                  2.display: -webkit-box; 必须结合的属性
+                  ，将对象作为弹性伸缩盒子模型显示 。
+                  3.-webkit-box-orient必须结合的属性
+                  ，设置或检索伸缩盒对象的子元素的排列方式 。
+                </p>
+              </div>
+              <div class="img-wrap">
+                <img src="./public/0.png" alt="文章封面图" />
+              </div>
+            </a>
+          </li>
+          <li class="list-item">
+            <a href="javascript:;">
+              <div class="text-content">
+                <p class="multiline_ecllipsis">
+                  1.-webkit-line-clamp用来限制在一个块元素显示的文本的行数。
+                  为了实现该效果，它需要组合其他的WebKit属性。常见结合属性：
+                  2.display: -webkit-box; 必须结合的属性
+                  ，将对象作为弹性伸缩盒子模型显示 。
+                  3.-webkit-box-orient必须结合的属性
+                  ，设置或检索伸缩盒对象的子元素的排列方式 。
+                </p>
+              </div>
+              <div class="img-wrap">
+                <img src="./public/0.png" alt="文章封面图" />
+              </div>
+            </a>
+          </li> -->
+        </ul>
+        <input id="getmore-btn" type="button" val="加载更多" hidden>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      ;(function () {
+        var Ohtml = document.getElementsByTagName('html')[0]
+        var tool = {
+          isPC: function () {
+            var userAgentInfo = navigator.userAgent
+            var Agents = [
+              'Android',
+              'iPhone',
+              'SymbianOS',
+              'Windows Phone',
+              'iPad',
+              'iPod',
+            ]
+            var flag = true
+            for (var v = 0; v < Agents.length; v++) {
+              if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = false
+                break
+              }
+            }
+            return flag
+          },
+          setWidth: function () {
+            var htmlW = Ohtml.getBoundingClientRect().width
+            if (this.isPC && htmlW > 750) {
+              Ohtml.style.fontSize = 50 + 'px' //PC打开固定为设计稿宽度
+              document.getElementsByClassName('container')[0].style.width =
+                '750px'
+            } else {
+              Ohtml.style.fontSize = htmlW / 15 + 'px'
+            }
+          },
+        }
+        tool.setWidth()
+      })()
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var requestUrl = 'http://127.0.0.1:3000/getGoodsList'
+        var basePic = 'http://127.0.0.1:3000'
+        var requestData = {
+          pageindex: 1,
+          pagesize: 9,
+        }
+        var pageLoad = {
+          isLocked: true, //是否正在加载
+          total: 0,
+          scroolT:0
+        }
+        var tool = {
+          getData: function (success, fail) {
+            $.ajax({
+              url: requestUrl,
+              mathod: 'GET',
+              data: requestData,
+            })
+              .done(function (res) {
+                success(res)
+              })
+              .fail(function (e) {
+                fail(e)
+              })
+          },
+          setDom: function (data) {
+            var domStr = ''
+            for (var i = 0; i < data.length; i++) {
+              console.log(data[i]['abstract'])
+              console.log(data[i]['image_url'])
+              domStr =
+                domStr +
+                `<li class="list-item">
+                  <a href="javascript:;">
+                    <div class="text-content">
+                      <p class="multiline_ecllipsis">
+                        ${data[i]['abstract']}
+                      </p>
+                    </div>
+                    <div class="img-wrap">
+                      <img src="${basePic}${data[i]['image_url']}" />
+                    </div>
+                  </a>
+                </li>`
+            }
+            return domStr
+          },
+          scrollFunc: function () {
+            //判断条件，根据当时情况是否执行
+            var that = this
+            if (!pageLoad.isLocked) {
+              //判断滚动条是否在最底部
+              var scroH = $(document).scrollTop() //滚动高度
+              var viewH = $(window).height() //可见高度
+              var contentH = $(document).height() //内容高度
+              var btnH = $('#getmore-btn').offset().top; //加载更多距离顶部的距离
+              if (scroH>pageLoad.scroolT&&scroH + viewH > btnH-viewH / 3) {
+                pageLoad.scroolT=scroH
+                var loadData = function () {
+                  if (
+                    Math.ceil(pageLoad.total / requestData.pagesize) >
+                    requestData.pageindex
+                  ) {
+                    pageLoad.isLocked = true
+                    ++requestData.pageindex
+                    tool.getData(
+                      function (res) {
+                        $('#list-ul').append(tool.setDom(res.message.data))
+                        pageLoad.isLocked = false
+                      },
+                      function (e) {
+                        pageLoad.isLocked = false
+                        console.log(e)
+                      }
+                    )
+                  }
+                }
+                loadData();
+              }
+            }
+          },
+        }
+
+        //初始化页面数据
+        tool.getData(
+          function (res) {
+            console.log(res.message.total)
+            pageLoad.total = res.message.total
+            $('#list-ul').append(tool.setDom(res.message.data))
+            pageLoad.isLocked = false
+          },
+          function (e) {
+            pageLoad.isLocked = false
+            console.log(e)
+          }
+        )
+
+        $(window).scroll(tool.scrollFunc)
+      })
+    </script>
+  </body>
+</html>

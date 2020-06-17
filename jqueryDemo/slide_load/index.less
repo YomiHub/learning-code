@@ -1,0 +1,68 @@
+@r: 50rem;
+a,
+input,
+button {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+} //除去点击高亮
+
+ul,body{
+  margin:0;
+  padding: 0;
+}
+
+ul li{
+  list-style: none;
+  color:#000;
+  
+}
+
+input,
+button {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+body * {
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+} //禁止用户在横竖屏时缩放、设置字体大小
+
+body {
+  font-family: Helvetica;
+} //所有设备都有的英文字体，中文有什么就用什么字体
+
+.multiline_ecllipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.container{
+  padding:40/@r;
+  margin:0 auto;
+}
+
+.list-item{
+  padding:40/@r 0 20/@r;
+  border-bottom: 1px solid #ccc;
+  a{
+    display: flex;
+    justify-content: space-between;
+  }
+  .text-content{
+    width:400/@r;
+    height:180/@r;
+    overflow: hidden;
+    font-size:16/@r;
+    line-height: 42/@r;
+  }
+  .img-wrap{
+    width:200/@r;
+    height:180/@r;
+    overflow: hidden;
+    img{
+      width:100%;
+    }
+  }
+}
