@@ -13,7 +13,7 @@
           <!-- <li class="list-item">
             <a href="javascript:;">
               <div class="text-content">
-                <p class="multiline_ecllipsis">
+                <p class="multiline-ecllipsis">
                   1.-webkit-line-clamp用来限制在一个块元素显示的文本的行数。
                   为了实现该效果，它需要组合其他的WebKit属性。常见结合属性：
                   2.display: -webkit-box; 必须结合的属性
@@ -30,7 +30,7 @@
           <li class="list-item">
             <a href="javascript:;">
               <div class="text-content">
-                <p class="multiline_ecllipsis">
+                <p class="multiline-ecllipsis">
                   1.-webkit-line-clamp用来限制在一个块元素显示的文本的行数。
                   为了实现该效果，它需要组合其他的WebKit属性。常见结合属性：
                   2.display: -webkit-box; 必须结合的属性
@@ -45,7 +45,7 @@
             </a>
           </li> -->
         </ul>
-        <input id="getmore-btn" type="button" val="加载更多" hidden>
+        <input id="getmore-btn" type="button" val="加载更多" hidden />
       </div>
     </div>
 
@@ -98,7 +98,7 @@
         var pageLoad = {
           isLocked: true, //是否正在加载
           total: 0,
-          scroolT:0
+          scroolT: 0,
         }
         var tool = {
           getData: function (success, fail) {
@@ -115,58 +115,62 @@
               })
           },
           setDom: function (data) {
-            var domStr = ''
+            var domStr = []
             for (var i = 0; i < data.length; i++) {
-              console.log(data[i]['abstract'])
-              console.log(data[i]['image_url'])
-              domStr =
-                domStr +
-                `<li class="list-item">
-                  <a href="javascript:;">
-                    <div class="text-content">
-                      <p class="multiline_ecllipsis">
-                        ${data[i]['abstract']}
-                      </p>
-                    </div>
-                    <div class="img-wrap">
-                      <img src="${basePic}${data[i]['image_url']}" />
-                    </div>
-                  </a>
-                </li>`
+              // console.log(data[i]['abstract'])
+              // console.log(data[i]['image_url'])
+              domStr.push(
+                "<li class='list-item'>\
+                <a href='javascript:;'>\
+                  <div class='text-content'>\
+                    <p class='multiline-ecllipsis'>" +
+                  data[i]['abstract'] +
+                  "</p>\
+                  </div>\
+                    <div class='img-wrap'>\
+                      <img src='" +
+                  basePic.concat(data[i]['image_url']) +
+                  "'/>\
+                    </div>\
+                 </a>\
+                </li>"
+              )
             }
-            return domStr
+            return domStr.join('')
           },
           scrollFunc: function () {
             //判断条件，根据当时情况是否执行
             var that = this
             if (!pageLoad.isLocked) {
-              //判断滚动条是否在最底部
+              //判断是向下滚动&&判断滚动条是否距离加载按钮有1/3屏
               var scroH = $(document).scrollTop() //滚动高度
               var viewH = $(window).height() //可见高度
               var contentH = $(document).height() //内容高度
-              var btnH = $('#getmore-btn').offset().top; //加载更多距离顶部的距离
-              if (scroH>pageLoad.scroolT&&scroH + viewH > btnH-viewH / 3) {
-                pageLoad.scroolT=scroH
-                var loadData = function () {
-                  if (
-                    Math.ceil(pageLoad.total / requestData.pagesize) >
-                    requestData.pageindex
-                  ) {
-                    pageLoad.isLocked = true
-                    ++requestData.pageindex
-                    tool.getData(
-                      function (res) {
-                        $('#list-ul').append(tool.setDom(res.message.data))
-                        pageLoad.isLocked = false
-                      },
-                      function (e) {
-                        pageLoad.isLocked = false
-                        console.log(e)
-                      }
-                    )
+              var btnH = $('#getmore-btn').offset().top //加载更多距离顶部的距离
+              if (scroH > pageLoad.scroolT) {
+                pageLoad.scroolT = scroH
+                if (scroH + viewH > btnH - viewH / 3) {
+                  var loadData = function () {
+                    if (
+                      Math.ceil(pageLoad.total / requestData.pagesize) >
+                      requestData.pageindex
+                    ) {
+                      pageLoad.isLocked = true
+                      ++requestData.pageindex
+                      tool.getData(
+                        function (res) {
+                          $('#list-ul').append(tool.setDom(res.message.data))
+                          pageLoad.isLocked = false
+                        },
+                        function (e) {
+                          pageLoad.isLocked = false
+                          console.log(e)
+                        }
+                      )
+                    }
                   }
                 }
-                loadData();
+                loadData()
               }
             }
           },
@@ -185,7 +189,7 @@
             console.log(e)
           }
         )
-
+        //监听滚动事件
         $(window).scroll(tool.scrollFunc)
       })
     </script>
