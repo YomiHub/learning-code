@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>基于Vue的移动端弹窗</title>
+  <link rel="stylesheet" href="./public/index.css">
+</head>
+<body>
+  <div class="container" id="app" v-cloak>
+    <div class="btn">{{txt}}</div>
+
+    <div class="pop-wrap" v-show="popShow">
+      <div class="pop-box">
+        <h1>这是弹窗的内容</h1>
+        <pop-card :cardTitle="cardTitle" :list="list" @ok="okMethods" @cancel="cancelMethods"></pop-card>
+      </div>
+    </div>
+
+    <table>
+      <tr>这是行内内容<tr>这是行内的行</tr></tr>
+      <tr>这是行内内容<td>这是行内的列</td></tr>
+    </table>
+  </div>
+  <script src="../vue.js"></script>
+  <script src="./public/index.js"></script>
+  <script>
+    var app = new Vue({
+      el:'#app',
+      data:{
+        popShow:true,
+        txt:"弹出报名窗口",
+        cardTitle:"弹窗的标题",
+         list:["这是弹窗内容1","这是内容2"]
+      },
+      methods:{
+        okMethods:function(){
+          this.popShow = false
+          console.log("确定")
+        },
+        cancelMethods:function(){
+         console.log("取消");
+        }
+      }
+    })
+  </script>
+</body>
+</html>
