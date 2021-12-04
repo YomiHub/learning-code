@@ -47,7 +47,9 @@
     <input type="text" v-focus />
     <hr />
     <h4>以下按钮用于测试axios</h4>
-    <button @click="axiosGet">axiosGet</button>
+    <button @click="axiosGet" class="flex-center">axiosGet</button>
+
+    <input type="text" placeholder="test">
   </div>
 </template>
 <style></style>

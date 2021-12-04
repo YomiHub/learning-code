@@ -1,3 +1,13 @@
 .mint-toast {
   color: red;
 }
+
+.flex-center{
+  display:flex;
+  justify-content: center;
+  align-items:center;
+}
+
+::placeholder{
+  color:red;
+}
